@@ -64,7 +64,7 @@ jobs:
           npm run package
 
       - name: compress package
-        run: 7z a utaformatix-win64.zip ./UtaFormatix-win32-x64/*
+        run: 7z a utaformatix-win64.zip ./utaformatix-electron/*
 
       - name: Upload package
         uses: actions/upload-artifact@v1.0.0
