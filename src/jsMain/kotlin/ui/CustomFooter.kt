@@ -41,14 +41,14 @@ val CustomFooter = FC<CustomFooterProps> { props ->
             Link {
                 color = NamedColor.grey
                 underline = LinkUnderline.hover
-                href = "/app/beta/index.html"
+                href = "./beta/index.html"
                 +"Beta"
             }
             +"　|　"
             Link {
                 color = NamedColor.grey
                 underline = LinkUnderline.hover
-                href = "/app/harm/index.html"
+                href = "./harm/index.html"
                 +"Harmoloid2"
             }
         }
