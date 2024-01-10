@@ -66,6 +66,11 @@ jobs:
           mkdir ../build/distributions/harm
           cp -r build/distributions/* ../build/distributions/harm
 
+      - name: Get ToPinyinAndRomaji
+        run: |
+          cd ./build/distributions/
+          git clone https://github.com/atonyxu/ToPinyinAndRomaji
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:

@@ -48,8 +48,8 @@ val CustomFooter = FC<CustomFooterProps> { props ->
             Link {
                 color = NamedColor.grey
                 underline = LinkUnderline.hover
-                href = "https://www.qqxiuzi.cn/zh/pinyin/"
-                +"拼音转换"
+                href = "./ToPinyinAndRomaji/index.html"
+                +"拼音&罗马转换"
             }
             +"　|　"
             Link {
