@@ -41,15 +41,22 @@ val CustomFooter = FC<CustomFooterProps> { props ->
             Link {
                 color = NamedColor.grey
                 underline = LinkUnderline.hover
-                href = "./beta/index.html"
-                +"Beta"
+                href = "http://vsqx-platform.ysupan.com/"
+                +"VSQx分享平台"
+            }
+            +"　|　"
+            Link {
+                color = NamedColor.grey
+                underline = LinkUnderline.hover
+                href = "https://www.qqxiuzi.cn/zh/pinyin/"
+                +"拼音转换"
             }
             +"　|　"
             Link {
                 color = NamedColor.grey
                 underline = LinkUnderline.hover
                 href = "./harm/index.html"
-                +"Harmoloid2"
+                +"和声生成"
             }
         }
     }
