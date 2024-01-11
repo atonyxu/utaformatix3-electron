@@ -58,6 +58,13 @@ val CustomFooter = FC<CustomFooterProps> { props ->
                 href = "./harm/index.html"
                 +"和声生成"
             }
+            +"　|　"
+            Link {
+                color = NamedColor.grey
+                underline = LinkUnderline.hover
+                href = "./lrc-maker/index.html"
+                +"LRC歌词制作"
+            }
         }
     }
 }

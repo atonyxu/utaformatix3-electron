@@ -57,6 +57,11 @@ jobs:
           cd ./build/distributions/
           git clone https://github.com/atonyxu/ToPinyinAndRomaji
 
+      - name: Get LRC-Maker
+        run: |
+          cd ./build/distributions/
+          git clone https://github.com/magic-akari/lrc-maker -b gh-pages
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
