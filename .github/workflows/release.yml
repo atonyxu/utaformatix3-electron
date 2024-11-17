@@ -78,7 +78,7 @@ jobs:
         run: 7z a utaformatix-${{ matrix.os.arch }}.zip ./utaformatix-electron/*
 
       - name: Upload package
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: utaformatix-${{ matrix.os.arch }}.zip
           path: utaformatix-${{ matrix.os.arch }}.zip
