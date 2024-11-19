@@ -1,0 +1,150 @@
+name: Build Utaformatix With Pake CLI
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: "项目名称"
+        required: true
+        default: "utaformatix"
+      width:
+        description: "宽度"
+        required: true
+        default: "1200"
+      height:
+        description: "高度"
+        required: false
+        default: "780"
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os.runs-on }}
+
+    strategy:
+      matrix:
+        os:
+          - runs-on: windows-latest
+            arch: win-x64
+          - runs-on: macos-latest
+            arch: osx-x64
+          - runs-on: ubuntu-20.04
+            arch: linux-x64
+          - runs-on: ubuntu-20.04
+            arch: linux-arm64
+
+    steps:
+      - name: Get Date
+        id: date
+        uses: Kaven-Universe/github-action-current-date-time@v1
+        with:
+          format: "YYYYMMDD"
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Rust for ubuntu-20.04
+        if: matrix.os.runs-on == 'ubuntu-20.04'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-musl
+
+      - name: Install Rust for windows-latest
+        if: matrix.os.runs-on == 'windows-latest'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable-x86_64-msvc
+          target: x86_64-pc-windows-msvc
+
+      - name: Install Rust for macos-latest
+        if: matrix.os.runs-on == 'macos-latest'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: x86_64-apple-darwin
+
+      - name: Install dependencies (ubuntu only)
+        if: matrix.os.runs-on == 'ubuntu-20.04'
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev gnome-video-effects gnome-video-effects-extra
+          version: 1.1
+
+      - name: Install pake-cli local
+        shell: bash
+        run: |
+          npm install pake-cli -g
+
+      - name: Rust cache restore
+        uses: actions/cache/restore@v3
+        id: cache_store
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            node_modules/pake-cli/src-tauri/target/
+          key: ${{ matrix.os.runs-on }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build Utaformatix
+        run: |
+          git clone https://github.com/atonyxu/utaformatix3-electron
+          cd utaformatix3-electron
+          ./gradlew build
+
+      - name: Build Harmoloid
+        run: |
+          git clone https://github.com/sdercolin/harmoloid2
+          cd harmoloid2
+          ./gradlew build
+          mkdir ../utaformatix3-electron/build/distributions/harm
+          cp -r build/distributions/* ../utaformatix3-electron/build/distributions/harm
+
+      - name: Get ToPinyinAndRomaji
+        run: |
+          cd ./utaformatix3-electron/build/distributions/
+          git clone https://github.com/atonyxu/ToPinyinAndRomaji
+
+      - name: Get LRC-Maker
+        run: |
+          cd ./utaformatix3-electron/build/distributions/
+          git clone https://github.com/magic-akari/lrc-maker -b gh-pages
+
+      - name: Build with pake-cli
+        run: |
+          pake ./utaformatix3-electron/build/distributions/index.html --name ${{ inputs.project_name }} --use-local-file --height ${{ inputs.height }} --width ${{ inputs.width }}
+          7z a ${{ inputs.project_name }}-${{ matrix.os.arch }}-rust.zip ./${{ inputs.project_name }}.*
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.project_name }}-${{ matrix.os.arch }}-rust.zip
+          path: ${{ inputs.project_name }}-${{ matrix.os.arch }}-rust.zip
+          retention-days: 3
+
+      - name: Rust cache store
+        uses: actions/cache/save@v3
+        if: steps.cache_store.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            node_modules/pake-cli/src-tauri/target/
+          key: ${{ matrix.os.runs-on }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
+          
+      - name: Create release 
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.date.outputs.time }}
+          body: ${{ inputs.project_name }} build on ${{ steps.date.outputs.time }}
+          files: |
+            ${{ inputs.project_name }}-${{ matrix.os.arch }}-rust.zip
