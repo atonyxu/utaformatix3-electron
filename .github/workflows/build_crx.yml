@@ -65,6 +65,7 @@ jobs:
           npm install crx -g
           crx keygen ./ --force
           crx pack ./utaformatix3-electron/build/distributions/ -p key.pem -o ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
+          find /home -name *.crx
           ls -l
           
 
