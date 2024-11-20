@@ -64,6 +64,8 @@ jobs:
         run: |
           npm install crx -g
           crx pack ./utaformatix3-electron/build/distributions/ -o ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
+          find /home -name '*.crx'
+          find /home -name '*.zip'
           
 
       - name: Upload archive
