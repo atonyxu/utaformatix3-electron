@@ -1,4 +1,4 @@
-name: Build Utaformatix With Pake CLI
+name: Build Utaformatix CRX
 on:
   workflow_dispatch:
     inputs:
