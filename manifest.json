@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "UtaFormatix",
+    "version": "1.0",
+    "description": "UtaFormatix",
+    "action": {
+      "default_icon": {
+        "16": "icon.svg",
+        "48": "icon.svg",
+        "128": "icon.svg"
+      }
+    },
+    "icons": {
+      "16": "icon.svg",
+      "48": "icon.svg",
+      "128": "icon.svg"
+    },
+    "permissions": [
+      "activeTab",
+      "storage",
+      "tabs"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["icon.svg"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+  }
