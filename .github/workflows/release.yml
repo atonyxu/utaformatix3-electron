@@ -1,3 +1,4 @@
+name: Build Utaformatix With Electron
 on:
   workflow_dispatch:
     inputs:
