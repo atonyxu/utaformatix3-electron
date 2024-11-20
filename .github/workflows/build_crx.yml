@@ -63,7 +63,7 @@ jobs:
       - name: Build Crx
         run: |
           npm install crx -g
-          crx pack ./utaformatix3-electron/build/distributions/ -o ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
+          crx pack ./utaformatix3-electron/build/distributions/ -o ./utaformatix3-electron/build/${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ./utaformatix3-electron/build/${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
           find /home/runner/work/utaformatix3-electron -name '*.crx'
           find /home/runner/work/utaformatix3-electron -name '*.zip'
           
