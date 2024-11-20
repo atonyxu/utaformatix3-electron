@@ -63,10 +63,7 @@ jobs:
       - name: Build Crx
         run: |
           npm install crx -g
-          crx keygen ./ --force
-          crx pack ./utaformatix3-electron/build/distributions/ -p key.pem -o ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
-          find /home -name *.crx
-          ls -l
+          crx pack ./utaformatix3-electron/build/distributions/ -o ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx --zip-output ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
           
 
       - name: Upload archive
@@ -82,5 +79,5 @@ jobs:
           tag_name: ${{ steps.date.outputs.time }}
           body: ${{ inputs.project_name }} build on ${{ steps.date.outputs.time }}
           files: |
-            ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
-            ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx
+            ./utaformatix3-electron/build/${{ inputs.project_name }}-${{ steps.date.outputs.time }}.crx
+            ./utaformatix3-electron/build/${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
