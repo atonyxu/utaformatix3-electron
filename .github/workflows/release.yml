@@ -21,44 +21,21 @@ jobs:
             arch: linux-arm64
 
     steps:
-      - uses: actions/checkout@v2.3.1
-        with:
-          ref: master
-
       - name: Get Date
         id: date
         uses: Kaven-Universe/github-action-current-date-time@v1
         with:
           format: "YYYYMMDD"
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
+      - name: Build Cache Restore
+        uses: actions/cache/restore@v3
         with:
-          java-version: 17
+          path: |
+            ./utaformatix3-electron/build/distributions/
+          key: utaformatix-${{ steps.date.outputs.time }}
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build master branch
-        run: ./gradlew build
-
-      - name: Build Harmoloid
-        run: |
-          git clone https://github.com/sdercolin/harmoloid2
-          cd harmoloid2
-          ./gradlew build
-          mkdir ../build/distributions/harm
-          cp -r build/distributions/* ../build/distributions/harm
-
-      - name: Get ToPinyinAndRomaji
-        run: |
-          cd ./build/distributions/
-          git clone https://github.com/atonyxu/ToPinyinAndRomaji
-
-      - name: Get LRC-Maker
-        run: |
-          cd ./build/distributions/
-          git clone https://github.com/magic-akari/lrc-maker -b gh-pages
+      - name: Move File
+        run: cp -r ./utaformatix3-electron/* ./ ; rm -rf ./utaformatix3-electron
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1

@@ -60,9 +60,8 @@ jobs:
           cp utaformatix3-electron/background.js utaformatix3-electron/build/distributions/background.js
           7z a ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip ./utaformatix3-electron/build/distributions/*
 
-      - name: Build cache restore
-        uses: actions/cache/restore@v3
-        id: build_cache_store
+      - name: Build Cache Store
+        uses: actions/cache/save@v3
         with:
           path: |
             ./utaformatix3-electron/build/distributions/
