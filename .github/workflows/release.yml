@@ -21,15 +21,14 @@ jobs:
             arch: linux-arm64
 
     steps:
-      - uses: actions/checkout@v2.3.1
-        with:
-          ref: master
-
       - name: Get Date
         id: date
         uses: Kaven-Universe/github-action-current-date-time@v1
         with:
           format: "YYYYMMDD"
+
+      - name: Move File
+        run: git clone https://github.com/atonyxu/utaformatix3-electron
 
       - name: Build Cache Restore
         uses: actions/cache/restore@v3
@@ -37,9 +36,6 @@ jobs:
           path: |
             ./utaformatix3-electron/build/distributions/
           key: utaformatix-${{ steps.date.outputs.time }}
-
-      - name: Move File
-        run: mkdir -p build/ ; cp -r ./utaformatix3-electron/build/* ./build ; rm -rf ./utaformatix3-electron
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
@@ -49,8 +45,8 @@ jobs:
       - name: Run electron-package
         run: |
           npm i electron-packager -g
-          cp ./package.json ./build/distributions/package.json
-          cp ./main.js ./build/distributions/main.js
+          cp ./utaformatix3-electron/package.json ./utaformatix3-electron/build/distributions/package.json
+          cp ./utaformatix3-electron/main.js ./utaformatix3-electron/build/distributions/main.js
           npm run package
 
       - name: compress package
