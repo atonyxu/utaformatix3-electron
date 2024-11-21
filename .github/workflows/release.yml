@@ -37,11 +37,6 @@ jobs:
             ./utaformatix3-electron/build/distributions/
           key: utaformatix-${{ steps.date.outputs.time }}
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: "./build/distributions"
-
       - name: Run electron-package
         run: |
           npm i electron-packager -g
