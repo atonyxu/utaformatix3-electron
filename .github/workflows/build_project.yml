@@ -14,8 +14,16 @@ jobs:
     strategy:
       matrix:
         os:
-          - runs-on: ubuntu-20.04
+          - runs-on: windows-latest
+            arch: win-x64
+          - runs-on: macos-latest
+            arch: osx-x64
+          - runs-on: ubuntu-latest
             arch: linux-x64
+          - runs-on: macos-latest
+            arch: osx-arm64
+          - runs-on: ubuntu-latest
+            arch: linux-arm64
 
     steps:
       - name: Get Date
@@ -65,7 +73,7 @@ jobs:
         with:
           path: |
             ./utaformatix3-electron/build/distributions/
-          key: utaformatix-${{ steps.date.outputs.time }}
+          key: utaformatix-${{ steps.date.outputs.time }}-${{ matrix.os.arch }}
 
       - name: Upload archive
         uses: actions/upload-artifact@v3
