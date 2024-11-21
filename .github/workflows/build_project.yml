@@ -1,0 +1,84 @@
+name: Build Utaformatix CRX
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: "项目名称"
+        required: true
+        default: "utaformatix"
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os.runs-on }}
+
+    strategy:
+      matrix:
+        os:
+          - runs-on: ubuntu-20.04
+            arch: linux-x64
+
+    steps:
+      - name: Get Date
+        id: date
+        uses: Kaven-Universe/github-action-current-date-time@v1
+        with:
+          format: "YYYYMMDD"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build Utaformatix
+        run: |
+          git clone https://github.com/atonyxu/utaformatix3-electron
+          cd utaformatix3-electron
+          ./gradlew build
+
+      - name: Build Harmoloid
+        run: |
+          git clone https://github.com/sdercolin/harmoloid2
+          cd harmoloid2
+          ./gradlew build
+          mkdir ../utaformatix3-electron/build/distributions/harm
+          cp -r build/distributions/* ../utaformatix3-electron/build/distributions/harm
+
+      - name: Get ToPinyinAndRomaji
+        run: |
+          cd ./utaformatix3-electron/build/distributions/
+          git clone https://github.com/atonyxu/ToPinyinAndRomaji
+
+      - name: Get LRC-Maker
+        run: |
+          cd ./utaformatix3-electron/build/distributions/
+          git clone https://github.com/magic-akari/lrc-maker -b gh-pages
+
+      - name: Copy files
+        run: |
+          cp utaformatix3-electron/icon.svg utaformatix3-electron/build/distributions/icon.svg
+          cp utaformatix3-electron/manifest.json utaformatix3-electron/build/distributions/manifest.json
+          cp utaformatix3-electron/background.js utaformatix3-electron/build/distributions/background.js
+          7z a ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip ./utaformatix3-electron/build/distributions/*
+
+      - name: Rust cache restore
+        uses: actions/cache/restore@v3
+        id: cache_store
+        with:
+          path: |
+            ./utaformatix3-electron/build/distributions/
+          key: utaformatix-${{ steps.date.outputs.time }}
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
+          path: ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
+          retention-days: 3
+          
+      - name: Create release 
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.date.outputs.time }}
+          body: ${{ inputs.project_name }} build on ${{ steps.date.outputs.time }}
+          files: |
+            ${{ inputs.project_name }}-${{ steps.date.outputs.time }}.zip
