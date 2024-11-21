@@ -1,4 +1,4 @@
-name: Build Utaformatix CRX
+name: Build Utaformatix Project Cache
 on:
   workflow_dispatch:
     inputs:
