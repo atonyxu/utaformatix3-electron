@@ -42,6 +42,8 @@ jobs:
           npm i electron-packager -g
           cp ./utaformatix3-electron/package.json ./utaformatix3-electron/build/distributions/package.json
           cp ./utaformatix3-electron/main.js ./utaformatix3-electron/build/distributions/main.js
+          cp ./utaformatix3-electron/package.json ./package.json
+          cp ./utaformatix3-electron/main.json ./main.json
           npm run package
 
       - name: compress package
