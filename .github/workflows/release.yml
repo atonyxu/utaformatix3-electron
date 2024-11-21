@@ -21,6 +21,10 @@ jobs:
             arch: linux-arm64
 
     steps:
+      - uses: actions/checkout@v2.3.1
+        with:
+          ref: master
+
       - name: Get Date
         id: date
         uses: Kaven-Universe/github-action-current-date-time@v1
@@ -35,7 +39,7 @@ jobs:
           key: utaformatix-${{ steps.date.outputs.time }}
 
       - name: Move File
-        run: cp -r ./utaformatix3-electron/* ./ ; rm -rf ./utaformatix3-electron
+        run: mkdir -p build/ ; cp -r ./utaformatix3-electron/build/* ./build ; rm -rf ./utaformatix3-electron
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
